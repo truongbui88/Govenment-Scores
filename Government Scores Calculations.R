@@ -15,7 +15,8 @@ score_data <- import("Value of Government Scores.xlsx") %>%
 #Calculate z-scores and rankings
 score_data_rank <- score_data %>% 
   mutate(across(high_grad_rate:water_quality, ~ (.x - mean(.x))/sd(.x), .names = "{.col}_zscore")) %>% 
-  mutate(across(violent_crime_rate_zscore:property_crime_rate_zscore, ~ -.x)) %>%    #negate these scores since lower crime rates are better than higher rates
+  mutate(across(violent_crime_rate_zscore:property_crime_rate_zscore, ~ -.x), #negate these scores since lower crime rates are better than higher rates
+         quality_of_roads_zscore = -quality_of_roads_zscore) %>%              #negate the quality of road score as a lower % of roads in poor condition is better 
   rowwise() %>% 
   mutate(avg_zscore = mean(c_across(high_grad_rate_zscore:water_quality_zscore))) %>% 
   ungroup() %>% 
